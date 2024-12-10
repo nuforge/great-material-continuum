@@ -1,31 +1,49 @@
 <template>
-  <section class="card-list">
-    <table class="wrapper">
-      <CardItem v-for="card in cards" :key="card.id" :card="card" @fetchCards="fetchCards" />
+  <div class="table-container">
+    <table class="card-table">
+      <thead>
+        <tr>
+          <th>Card</th>
+          <th>User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <CardItem v-for="card in cardStore.haves" :key="card.id" :card="card" />
+      </tbody>
     </table>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
+import { useCardStore } from '../stores/cardstore.ts';
 import CardItem from './CardItem.vue'
-import axios from 'axios';
+const cardStore = useCardStore();
 
-const cards = ref<{ id: number, card_name: string }[]>([]);
-
-const fetchCards = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/backend/api/endpoint.php?path=cards');
-
-    // Assign the first cards from the response to message
-    if (response.data.length > 0) {
-      cards.value = response.data; // Assuming the response is an array of cards
-    } else {
-      cards.value = [];
-    }
-  } catch (error) {
-    console.error('Error fetching the message:', error);
-  }
-};
-onMounted(fetchCards);
+onMounted(() => {
+  cardStore.fetchHaves();
+});
 </script>
+
+<style>
+.card-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th,
+  td {
+    text-align: left;
+    padding: 10px;
+
+
+  }
+
+  th:last-child,
+  td:last-child {
+    text-align: right;
+  }
+
+}
+</style>

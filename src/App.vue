@@ -45,8 +45,10 @@ nav a.router-link-exact-active:hover {
 
 nav a {
   display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  padding: .5rem 1rem;
+  margin: 0 1rem;
+  text-align: center;
+  border-radius: 8px;
 }
 
 nav a:first-of-type {
