@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
-import ExampleComponent from './components/ExampleComponent.vue'
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-      <ExampleComponent />
+      <HelloWorld msg="Great Material Continuum" />
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -22,7 +20,7 @@ import ExampleComponent from './components/ExampleComponent.vue'
 
 <style scoped>
 header {
-  line-height: 1.5;
+  line-height: 1;
   max-height: 100vh;
 }
 

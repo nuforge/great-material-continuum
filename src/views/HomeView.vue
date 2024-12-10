@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import ExampleComponent from '../components/ExampleComponent.vue'
+import CSVUpload from '../components/CSVUpload.vue'
+import CardList from '../components/CardList.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <ExampleComponent />
+    <CSVUpload />
+    <CardList />
   </main>
 </template>

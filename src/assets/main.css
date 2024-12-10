@@ -15,6 +15,23 @@ a,
   padding: 3px;
 }
 
+input[type='file'] {
+  display: none;
+}
+
+button,
+input[type='submit'],
+.custom-file-upload {
+  background-color: hsla(160, 100%, 37%, 1);
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  font-size: small;
+  border-radius: 0.25em;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
@@ -23,8 +40,7 @@ a,
 
 @media (min-width: 1024px) {
   body {
-    display: flex;
-    place-items: center;
+    margin: 1em;
   }
 
   #app {
