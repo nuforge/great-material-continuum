@@ -1,12 +1,11 @@
 <template>
-  <article class="card">
-    <tr>
-      <td>{{ card.card_name }}</td>
-      <td>
-        <button @click="deleteCard(card.id)">Delete</button>
-      </td>
-    </tr>
-  </article>
+  <tr class="card">
+    <td>{{ card.card_name }}</td>
+    <td>user{{ card.user_id }}</td>
+    <td>
+      <button @click="deleteCard(card.id)">Delete</button>
+    </td>
+  </tr>
 </template>
 
 <script setup lang="ts">
@@ -16,7 +15,7 @@ import axios from 'axios'
 defineProps({
   card: {
     type: Object,
-    default: () => ({ id: 0, card_name: '' })
+    default: () => (null)
   },
 })
 

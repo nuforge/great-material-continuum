@@ -6,11 +6,11 @@ error_reporting(E_ALL);
 // Allow cross-origin requests
 // http://localhost:8080/backend/api/endpoint.php (updated Apache DocumentRoot & directory)
 
-header('Access-Control-Allow-Origin: http://localhost:3000');  // Allow all domains or specify your domain like 'http://localhost:3000'
+header('Access-Control-Allow-Origin: http://localhost:3000');  // Allow 'http://localhost:3000'
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');  // Allow methods
 header('Access-Control-Allow-Headers: Content-Type, Authorization');  // Allow specific headers
 
-
+header("Content-Type: application/json");
 
 function getUsers() {
     // Fetch all users from the 'users' table
@@ -26,7 +26,7 @@ function getUsers() {
 }
 
 function getCards() {
-    // Fetch all users from the 'users' table
+    // Fetch all cards from the 'Haves' table
     $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
     $result = $db->query('SELECT * FROM haves');
     $cards = [];
@@ -52,8 +52,8 @@ function uploadCards() {
             $stmt->bindValue(':user_id', $card['user_id']);
             $stmt->execute();
         }
-        
-        echo json_encode(['message' => 'Cards uploaded successfully.']);
+        getCards();
+        //echo json_encode(['success' => true, 'id' => $db->lastInsertRowID()]);
     }  else {
         echo json_encode(['message' => 'Invalid CSV data.']);
     }
