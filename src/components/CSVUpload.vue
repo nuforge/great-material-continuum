@@ -2,15 +2,16 @@
   <div>
     <h1>Upload CSV to Add Cards</h1>
 
-    <!-- CSV upload form -->
-    <form @submit.prevent="handleFileUpload">
-      <label for="file-upload" class="custom-file-upload">
-        Choose File...
-      </label>
-      <input id="file-upload" type="file" ref="fileInput" accept=".csv" />
-      <button type="submit">Upload CSV</button>
-    </form>
-
+    <div class="wrapper">
+      <!-- CSV upload form -->
+      <form @submit.prevent="handleFileUpload">
+        <label for="file-upload" class="custom-file-upload">
+          Choose File...
+        </label>
+        <input id="file-upload" type="file" ref="fileInput" accept=".csv" />
+        <button type="submit">Upload CSV</button>
+      </form>
+    </div>
     <!-- Display success or error message -->
     <p v-if="uploadMessage">{{ uploadMessage }}</p>
   </div>
@@ -72,3 +73,15 @@ const uploadCardsToDatabase = async (cards: Card[]) => {
   }
 };
 </script>
+
+<style scoped>
+.wrapper button,
+.custom-file-upload {
+  display: inline-block;
+  margin: 0 1rem;
+}
+
+.custom-file-upload {
+  margin-left: 0;
+}
+</style>
