@@ -5,11 +5,11 @@
     <div class="wrapper">
       <!-- CSV upload form -->
       <form @submit.prevent="handleFileUpload">
-        <label for="file-upload" class="custom-file-upload">
-          Choose File...
+        <label for="file-upload">
+          <v-icon icon="mdi-folder-upload"></v-icon> upload
         </label>
         <input id="file-upload" type="file" ref="fileInput" accept=".csv" />
-        <button type="submit">Upload CSV</button>
+        <v-btn icon="mdi-upload"></v-btn>
       </form>
     </div>
     <!-- Display success or error message -->

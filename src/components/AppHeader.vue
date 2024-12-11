@@ -20,6 +20,10 @@ defineProps<{
 .greetings h1,
 .greetings h3 {
   text-align: center;
+
+  a:hover {
+    background-color: transparent;
+  }
 }
 
 @media (min-width: 1024px) {

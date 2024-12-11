@@ -3,7 +3,7 @@
     <td class="name">{{ card.card_name }}</td>
     <td class="userid">{{ card.user_id }}</td>
     <td class="actions">
-      <i class="material-icons delete-icon" @click="cardStore.deleteCard(card.id)">delete</i>
+      <v-icon icon="mdi-delete" @click="cardStore.deleteCard(card.id)"></v-icon>
     </td>
   </tr>
 </template>

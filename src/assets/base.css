@@ -13,6 +13,8 @@
   --vt-c-primary: rgb(0, 189, 126);
   --vt-c-primary-dark: rgb(0, 189, 126, 0.48);
 
+  --vt-c-link-hover: rgba(0, 189, 126, 0.2);
+
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
   --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);

@@ -4,21 +4,25 @@ import AppHeader from './components/AppHeader.vue';
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <AppHeader msg="Great Material Continuum" />
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/inventory">Inventory</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+  <v-app>
+    <v-container>
+      <header>
+        <div class="wrapper">
+          <AppHeader msg="Great Material Continuum" />
+          <nav>
+            <RouterLink to="/"><v-icon icon="mdi-home"></v-icon></RouterLink>
+            <RouterLink to="/inventory">Inventory</RouterLink>
+            <RouterLink to="/about">About</RouterLink>
+          </nav>
+        </div>
+      </header>
 
-  <RouterView />
-  <footer>
-    <p>&copy; 2024 Great Material Continuum</p>
-  </footer>
+      <RouterView />
+      <footer>
+        <p>&copy; 2024 Great Material Continuum</p>
+      </footer>
+    </v-container>
+  </v-app>
 </template>
 
 <style scoped>
