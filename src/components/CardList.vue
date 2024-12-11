@@ -36,8 +36,6 @@ onMounted(() => {
   td {
     text-align: left;
     padding: 10px;
-
-
   }
 
   th:last-child,

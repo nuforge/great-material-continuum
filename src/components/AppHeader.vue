@@ -1,14 +1,20 @@
+<template>
+  <div class="greetings">
+    <h1 class="green">
+      <RouterLink to="/">{{ msg }}</RouterLink>
+    </h1>
+  </div>
+</template>
+
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
+import { defineProps } from 'vue';
+
 defineProps<{
   msg: string
 }>()
-</script>
 
-<template>
-  <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
-  </div>
-</template>
+</script>
 
 <style scoped>
 .greetings h1,

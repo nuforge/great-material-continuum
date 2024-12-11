@@ -21,8 +21,16 @@ defineProps({
 })
 </script>
 
-<style type="scss">
+<style scoped>
 .cardrow:nth-child(odd) {
   background-color: var(--vt-c-black-soft);
+}
+
+.cardrow:hover {
+  background-color: hsla(160, 100%, 37%, 0.2);
+}
+
+td.name {
+  font-weight: bold;
 }
 </style>

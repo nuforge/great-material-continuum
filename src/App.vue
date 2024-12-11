@@ -1,42 +1,44 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <HelloWorld msg="Great Material Continuum" />
+      <AppHeader msg="Great Material Continuum" />
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/inventory">Inventory</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
   </header>
 
   <RouterView />
+  <footer>
+    <p>&copy; 2024 Great Material Continuum</p>
+  </footer>
 </template>
 
 <style scoped>
-header {
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  vertical-align: middle;
+}
+
+footer {
   line-height: 1;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
+  font-size: small;
+  margin-top: 1em;
+  padding-top: 1em;
+  color: var(--vt-c-text-dark);
+  border-top: 1px solid var(--vt-c-primary-dark);
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: var(--vt-c-text-dark-2);
 }
 
 nav a.router-link-exact-active:hover {
@@ -46,7 +48,6 @@ nav a.router-link-exact-active:hover {
 nav a {
   display: inline-block;
   padding: .5rem 1rem;
-  margin: 0 1rem;
   text-align: center;
   border-radius: 8px;
 }
@@ -56,11 +57,6 @@ nav a:first-of-type {
 }
 
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
 
   .logo {
     margin: 0 2rem 0 0;
@@ -74,10 +70,6 @@ nav a:first-of-type {
 
   nav {
     text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
   }
 }
 </style>
