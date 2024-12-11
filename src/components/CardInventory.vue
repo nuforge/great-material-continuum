@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <CardItem v-for="card in cardStore.haves" :key="card.id" :card="card" />
+        <CardItem v-for="card in cardStore.haves" :key="card.id" :card="card" table="haves" />
       </tbody>
     </table>
   </div>
@@ -17,12 +17,12 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useCardStore } from '../stores/cardstore.ts';
+import { useCardStore } from '@/stores/cardstore.ts';
 import CardItem from './CardItem.vue'
 const cardStore = useCardStore();
 
-onMounted(() => {
-  cardStore.fetchHaves();
+onMounted(async () => {
+  await cardStore.fetchHaves();
 });
 </script>
 

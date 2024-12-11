@@ -25,20 +25,29 @@ function getUsers() {
     echo json_encode($users); // Return users as JSON
 }
 
-function getCards() {
-    // Fetch all cards from the 'Haves' table
+
+function getCards($table) {
+    // Fetch all cards from the passed table
     $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
-    $result = $db->query('SELECT * FROM haves');
+    $result = $db->query("SELECT * FROM $table");
     $cards = [];
 
     while ($row = $result->fetchArray()) {
         $cards[] = $row;
     }
 
-    echo json_encode($cards); // Return users as JSON
+    echo json_encode($cards); // Return cards as JSON
 }
 
-function uploadCards() {
+function getHaves() {
+    getCards('haves');
+}
+
+function getWants() {
+    getCards('wants');
+}
+
+function uploadCards($table) {
     // Handle the CSV upload
     $input = json_decode(file_get_contents('php://input'), true);
     
@@ -47,26 +56,33 @@ function uploadCards() {
         
         foreach ($input['cards'] as $card) {
             // Insert each card into the 'haves' or 'wants' table
-            $stmt = $db->prepare('INSERT INTO haves (card_name,user_id) VALUES (:card_name,:user_id)');
+            $stmt = $db->prepare("INSERT INTO $table (card_name,user_id) VALUES (:card_name,:user_id)");
             $stmt->bindValue(':card_name', $card['card_name']);
             $stmt->bindValue(':user_id', $card['user_id']);
             $stmt->execute();
         }
-        getCards();
-        //echo json_encode(['success' => true, 'id' => $db->lastInsertRowID()]);
+        echo json_encode(['success' => true, 'table'=> $table, 'id' => $db->lastInsertRowID()]);
     }  else {
         echo json_encode(['message' => 'Invalid CSV data.']);
     }
 }
 
-function deleteCard() {
+function uploadHaves() {
+    uploadCards('haves');
+}
+
+function uploadWants() {
+    uploadCards('wants');
+}
+
+function deleteCard($table = 'haves') {
     // Handle the card deletion
     $input = json_decode(file_get_contents('php://input'), true);
     $cardId = $input['id'] ?? null;
     
     if (isset($cardId)) {
         $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db');
-        $stmt = $db->prepare('DELETE FROM haves WHERE id = :id');
+        $stmt = $db->prepare("DELETE FROM $table WHERE id = :id");
         $stmt->bindValue(':id', $cardId);
         $stmt->execute();
         
@@ -77,6 +93,13 @@ function deleteCard() {
 
 }
 
+function deleteHaveCard() {
+    deleteCard('haves');
+}
+function deleteWantCard() {
+    deleteCard('wants');
+}
+
 $routes = [
     'users' => [
         'GET' => 'getUsers',
@@ -84,10 +107,15 @@ $routes = [
         'PUT' => 'updateUser',
         'DELETE' => 'deleteUser'
     ],
-    'cards' => [
-        'GET' => 'getCards',
-        'POST' => 'uploadCards',
-        'DELETE' => 'deleteCard'
+    'haves' => [
+        'GET' => 'getHaves',
+        'POST' => 'uploadHaves',
+        'DELETE' => 'deleteHaveCard'
+    ],
+    'wants' => [
+        'GET' => 'getWants',
+        'POST' => 'uploadWants',
+        'DELETE' => 'deleteWantCard'
     ]
 ];
 

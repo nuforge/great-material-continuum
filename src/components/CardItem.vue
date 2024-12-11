@@ -3,7 +3,7 @@
     <td class="name">{{ card.card_name }}</td>
     <td class="userid">{{ card.user_id }}</td>
     <td class="actions">
-      <v-icon icon="mdi-delete" @click="cardStore.deleteCard(card.id)"></v-icon>
+      <v-icon icon="mdi-delete" @click="cardStore.deleteCard(card.id, table)"></v-icon>
     </td>
   </tr>
 </template>
@@ -18,6 +18,10 @@ defineProps({
     type: Object,
     default: () => (null)
   },
+  table: {
+    type: String,
+    default: () => ('haves')
+  }
 })
 </script>
 

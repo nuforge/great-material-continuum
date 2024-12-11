@@ -1,26 +1,31 @@
 <template>
-  <div>
-    <h1>Upload CSV to Add Cards</h1>
-
-    <div class="wrapper">
+  <v-card subtitle="Upload CSV to Add Cards">
+    <v-card-actions>
       <!-- CSV upload form -->
       <form @submit.prevent="handleFileUpload">
         <label for="file-upload">
-          <v-icon icon="mdi-folder-upload"></v-icon> upload
+          <v-btn prepend-icon="mdi-folder-upload" @click="triggerFileInput">Choose a CSV file</v-btn>
         </label>
-        <input id="file-upload" type="file" ref="fileInput" accept=".csv" />
-        <v-btn icon="mdi-upload"></v-btn>
+        <input id="file-upload" type="file" ref="fileInput" accept=".csv" style="display: none;" />
+        <v-btn prepend-icon="mdi-export-variant" @click="handleFileUpload">upload</v-btn>
       </form>
-    </div>
-    <!-- Display success or error message -->
-    <p v-if="uploadMessage">{{ uploadMessage }}</p>
-  </div>
+      <!-- Display success or error message -->
+      <p v-if="uploadMessage">{{ uploadMessage }}</p>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 import axios from 'axios';
 import Papa from 'papaparse';  // Import PapaParse
+
+const cardTable = defineProps({
+  table: {
+    type: String,
+    required: true,
+  },
+});
 
 // Define the Card type
 interface Card {
@@ -32,7 +37,11 @@ const uploadMessage = ref<string | null>(null);
 // Define the file input reference
 const fileInput = ref<HTMLInputElement | null>(null);
 
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
 // Handle the file upload and parse the CSV
+
 const handleFileUpload = async () => {
   const input = fileInput.value;  // Access the file input reference
 
@@ -46,9 +55,7 @@ const handleFileUpload = async () => {
   // Parse the CSV file using PapaParse
   Papa.parse<Card>(file, {
     complete: async (result) => {
-      console.log("Parsed CSV result:", result);
-      const cards: Card[] = result.data;  // Assuming CSV is structured in rows of [card_name, type]
-
+      const cards: Card[] = result.data;  // Assuming CSV is structured in rows of [card_name, user]
       // Send the parsed data to the backend
       await uploadCardsToDatabase(cards);
     },
@@ -63,9 +70,8 @@ const uploadCardsToDatabase = async (cards: Card[]) => {
     const data = {
       cards,
     };
-
-    const response = await axios.post('http://localhost:8080/backend/api/endpoint.php?path=cards', data);
-    console.log(response.data);
+    const response = await axios.post(`http://localhost:8080/backend/api/endpoint.php?path=${cardTable.table}`, data);
+    console.log("Uploaded cards:", cards, "to table:", cardTable.table, response.data);
     uploadMessage.value = "Cards uploaded successfully!";
   } catch (error) {
     console.error("Error uploading cards:", error);

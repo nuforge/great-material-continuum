@@ -8,7 +8,16 @@ import router from './router'
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { VApp, VBtn, VIcon, VCard, VContainer, VDialog } from 'vuetify/components'
+import {
+  VApp,
+  VContainer,
+  VMain,
+  VBtn,
+  VIcon,
+  VCard,
+  VCardActions,
+  VDialog,
+} from 'vuetify/components'
 
 import '@mdi/font/css/materialdesignicons.css'
 
@@ -20,9 +29,11 @@ const vuetify = createVuetify({
   },
   components: {
     VApp,
-    VCard,
-    VIcon,
     VContainer,
+    VMain,
+    VCard,
+    VCardActions,
+    VIcon,
     VBtn,
     VDialog,
   },
