@@ -15,7 +15,6 @@ import AppHeader from './components/AppHeader.vue';
               <RouterLink to="/inventory"><v-icon icon="mdi-view-list"></v-icon> Inventory</RouterLink>
               <RouterLink to="/wishlist"><v-icon icon="mdi-format-list-checkbox"></v-icon> Wishlist</RouterLink>
               <RouterLink to="/trades"><v-icon icon="mdi-swap-horizontal-bold"></v-icon> Trades</RouterLink>
-              <RouterLink to="/about"><v-icon icon="mdi-information-outline"></v-icon> About</RouterLink>
             </nav>
           </div>
         </header>

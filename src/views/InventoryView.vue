@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-space-between align-center">
     <h1>Inventory</h1>
-    <CSVUpload table="inventory" />
+    <CSVUpload table="inventory" @upload-success="uploadSuccess" />
   </div>
   <div class="inventory">
     <CardList :cards="cardStore.inventory" table="inventory" @delete-item="deleteItem" />
@@ -16,8 +16,16 @@ import { useCardStore } from '@/stores/cardstore.ts';
 const cardStore = useCardStore();
 
 onMounted(async () => {
-  await cardStore.fetchInventory();
+  await loadInventory();
 });
+
+const uploadSuccess = async () => {
+  await loadInventory();
+};
+
+const loadInventory = async () => {
+  await cardStore.fetchInventory();
+};
 
 const deleteItem = (itemId: number, tableName: string) => {
   cardStore.deleteCard(itemId, tableName);

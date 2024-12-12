@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-space-between align-center">
     <h1>Wishlist</h1>
-    <CSVUpload table="inventory" />
+    <CSVUpload table="wishlist" @upload-success="uploadSuccess" />
   </div>
   <div class="wishlist">
     <CardList :cards="cardStore.wishlist" table="wishlist" @delete-item="deleteItem" />
@@ -16,9 +16,16 @@ import { useCardStore } from '@/stores/cardstore.ts';
 const cardStore = useCardStore();
 
 onMounted(async () => {
-  await cardStore.fetchWishlist();
+  await loadWishlist();
 });
 
+const uploadSuccess = async () => {
+  await loadWishlist();
+};
+
+const loadWishlist = async () => {
+  await cardStore.fetchWishlist();
+};
 const deleteItem = (itemId: number, tableName: string) => {
   cardStore.deleteCard(itemId, tableName);
 };

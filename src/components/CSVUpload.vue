@@ -1,32 +1,29 @@
 <template>
-  <v-dialog max-width="500">
-    <template v-slot:activator="{ props: dialogOpen }">
-      <v-btn v-bind="dialogOpen" text="Upload CSV List" prepend-icon="mdi-file-upload" variant="outlined" size="small"
-        color="grey"></v-btn>
-    </template>
-    <template v-slot:default="{ isActive }">
-      <v-card title="Upload CSV List" prepend-icon="mdi-file-upload" max-width="400">
-        <v-card-text>{{ uploadMessage }}
-          <!-- CSV upload form -->
-          <v-form v-model="valid" @submit.prevent>
-            <v-file-input v-model="file" accept=".csv" clearable label="Select CSV file" prepend-icon="mdi-paperclip"
-              chips></v-file-input>
-          </v-form>
-        </v-card-text>
-        <v-card-actions class="d-flex jusify-space-between">
-          <v-btn text="Close" color="warning" @click="isActive.value = false"></v-btn>
-          <v-btn text="Upload" color="primary" @click="handleFileUpload"></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
+  <v-btn @click="dialog = true" text="Upload CSV List" prepend-icon="mdi-file-upload" variant="outlined" size="small"
+    color="grey"></v-btn>
+  <v-dialog v-model="dialog" max-width="500">
+    <v-card title="Upload CSV List" prepend-icon="mdi-file-upload" max-width="400">
+      <v-card-text>{{ uploadMessage }}
+        <!-- CSV upload form -->
+        <v-form v-model="valid" @submit.prevent>
+          <v-file-input v-model="file" accept=".csv" clearable label="Select CSV file" prepend-icon="mdi-paperclip"
+            chips></v-file-input>
+        </v-form>
+      </v-card-text>
+      <v-card-actions class="d-flex jusify-space-between">
+        <v-btn text="Close" color="warning" @click="dialog = false"></v-btn>
+        <v-btn text="Upload" color="primary" @click="handleFileUpload"></v-btn>
+      </v-card-actions>
+    </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import axios from 'axios';
 import Papa from 'papaparse';  // Import PapaParse
 
+const dialog = ref<boolean>(false);
 const valid = ref<boolean>(false);
 const file = ref<File | null>(null);
 const uploadMessage = ref<string | null>(null);
@@ -42,6 +39,8 @@ const cardTable = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['upload-success', 'upload-failure']);
 
 // Handle the file upload and parse the CSV
 const handleFileUpload = async () => {
@@ -69,11 +68,13 @@ const uploadCardsToDatabase = async (cards: Card[]) => {
       cards,
     };
     const response = await axios.post(`http://localhost:8080/backend/api/endpoint.php?path=${cardTable.table}`, data);
-    console.log("Uploaded cards:", cards, "to table:", cardTable.table, response.data);
-    uploadMessage.value = "Cards uploaded successfully!";
+    console.log("Upload response:", response.data);
+    dialog.value = false;
+    emit('upload-success');
   } catch (error) {
     console.error("Error uploading cards:", error);
     uploadMessage.value = "Failed to upload cards.";
+    emit('upload-failure');
   }
 };
 </script>
