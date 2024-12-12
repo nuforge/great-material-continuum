@@ -48,7 +48,7 @@ function getCards($table) {
     while ($row = $result->fetchArray()) {
         $cards[] = $row;
     }
-
+    $cards = $cards ?? [];
     echo json_encode($cards); // Return cards as JSON
 }
 

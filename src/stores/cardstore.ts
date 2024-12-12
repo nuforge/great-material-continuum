@@ -15,48 +15,67 @@ export const useCardStore = defineStore('cards', {
   }),
   actions: {
     async fetchInventory() {
-      const response = await axios.get(
-        'http://localhost:8080/backend/api/endpoint.php?path=inventory',
-      )
-      this.inventory = response.data
-      console.log(this.inventory)
+      try {
+        const response = await axios.get(
+          'http://localhost:8080/backend/api/endpoint.php?path=inventory',
+        )
+        if (response.data && Array.isArray(response.data)) {
+          this.inventory = response.data
+        } else {
+          console.error('Invalid response from API:', response.data)
+          return [] // Return empty array if response is invalid
+        }
+      } catch (error) {
+        console.error('Error fetching inventory:', error)
+        return [] // Return empty array in case of an error
+      }
     },
     async fetchWishlist() {
-      const response = await axios.get(
-        'http://localhost:8080/backend/api/endpoint.php?path=wishlist',
-      )
-      this.wishlist = response.data
+      try {
+        const response = await axios.get(
+          'http://localhost:8080/backend/api/endpoint.php?path=wishlist',
+        )
+        if (response.data && Array.isArray(response.data)) {
+          this.wishlist = response.data
+        } else {
+          console.error('Invalid response from API:', response.data)
+          return [] // Return empty array if response is invalid
+        }
+      } catch (error) {
+        console.error('Error fetching inventory:', error)
+        return [] // Return empty array in case of an error
+      }
     },
 
     async deleteCard(id: number, table: string) {
       switch (table) {
         case 'inventory':
-          this.deleteHave(id)
+          this.deleteInventory(id)
           break
         case 'wishlist':
-          this.deleteWant(id)
+          this.deleteWishlist(id)
           break
         default:
           console.error('Unknown table:', table)
       }
     },
 
-    async deleteHave(id: number) {
+    async deleteInventory(id: number) {
       try {
         await axios.delete(`http://localhost:8080/backend/api/endpoint.php?path=inventory`, {
           data: { id },
         })
-        this.inventory = this.inventory.filter((card) => card.card_id !== id) // Update the state
+        this.inventory = this.inventory.filter((card) => card.id !== id) // Update the state
       } catch (error) {
         console.error('Error deleting the card:', error)
       }
     },
-    async deleteWant(id: number) {
+    async deleteWishlist(id: number) {
       try {
         await axios.delete(`http://localhost:8080/backend/api/endpoint.php?path=wishlist`, {
           data: { id },
         })
-        this.wishlist = this.wishlist.filter((card) => card.card_id !== id) // Update the state
+        this.wishlist = this.wishlist.filter((card) => card.id !== id) // Update the state
       } catch (error) {
         console.error('Error deleting the card:', error)
       }

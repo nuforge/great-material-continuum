@@ -23,7 +23,7 @@ import CardItem from './CardItem.vue'
 defineProps({
   cards: {
     type: Object,
-    default: () => (null)
+    default: () => ({})
   },
   table: {
     type: String,

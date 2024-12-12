@@ -1,11 +1,10 @@
 <template>
   <h1>Wishlist</h1>
   <div class="wishlist">
-    <CardList :cards="cardStore.wishlist" table="wishlist" />
+    <CardList :cards="cardStore.wishlist" table="wishlist" @delete-item="deleteItem" />
     <CSVUpload table="wishlist" />
   </div>
 </template>
-
 
 <script setup lang="ts">
 import CSVUpload from '@/components/CSVUpload.vue'
@@ -17,6 +16,10 @@ const cardStore = useCardStore();
 onMounted(async () => {
   await cardStore.fetchWishlist();
 });
+
+const deleteItem = (itemId: number, tableName: string) => {
+  cardStore.deleteCard(itemId, tableName);
+};
 </script>
 
 <style>
