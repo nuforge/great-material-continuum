@@ -14,7 +14,7 @@ function loadGraph($db) {
         INNER JOIN wants w ON u1.id = w.user_id
         LEFT JOIN cards c1 ON h.card_id = c1.id
         LEFT JOIN cards c2 ON w.card_id = c2.id
-        GROUP BY u1.id";
+        GROUP BY h.card_id, w.card_id";
     $result = $db->query($query);
 
     $graph = [];

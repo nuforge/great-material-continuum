@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <v-table class="card-table">
+    <v-table class="card-table rounded">
       <thead>
         <tr>
           <th>Card</th>
@@ -9,21 +9,23 @@
         </tr>
       </thead>
       <tbody>
-        <CardItem v-for="card in cardStore.wants" :key="card.id" :card="card" table="wants" />
+        <CardItem v-for="card in cards" :key="card.card_id" :card="card" table="wants" />
       </tbody>
     </v-table>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useCardStore } from '@/stores/cardstore.ts';
+import { defineProps } from 'vue';
 import CardItem from './CardItem.vue'
-const cardStore = useCardStore();
 
-onMounted(async () => {
-  await cardStore.fetchWants();
-});
+defineProps({
+  cards: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
 </script>
 
 <style>

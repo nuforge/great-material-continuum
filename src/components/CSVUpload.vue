@@ -17,19 +17,19 @@ import Papa from 'papaparse';  // Import PapaParse
 
 const valid = ref<boolean>(false);
 const file = ref<File | null>(null);
-const cardTable = defineProps({
-  table: {
-    type: String,
-    required: true,
-  },
-});
+const uploadMessage = ref<string | null>(null);
 
 // Define the Card type
 interface Card {
   card_name: string;
 }
 
-const uploadMessage = ref<string | null>(null);
+const cardTable = defineProps({
+  table: {
+    type: String,
+    required: true,
+  },
+});
 
 // Handle the file upload and parse the CSV
 const handleFileUpload = async () => {

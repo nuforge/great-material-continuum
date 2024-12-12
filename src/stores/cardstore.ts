@@ -2,10 +2,15 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+interface Card {
+  card_id: number
+  card_name: string
+}
+
 export const useCardStore = defineStore('cards', {
   state: () => ({
-    haves: [] as { id: number; card_name: string }[],
-    wants: [] as { id: number; card_name: string }[],
+    haves: [] as Card[],
+    wants: [] as Card[],
   }),
   actions: {
     async fetchHaves() {
@@ -35,7 +40,7 @@ export const useCardStore = defineStore('cards', {
         await axios.delete(`http://localhost:8080/backend/api/endpoint.php?path=haves`, {
           data: { id },
         })
-        this.haves = this.haves.filter((card) => card.id !== id) // Update the state
+        this.haves = this.haves.filter((card) => card.card_id !== id) // Update the state
       } catch (error) {
         console.error('Error deleting the card:', error)
       }
@@ -45,7 +50,7 @@ export const useCardStore = defineStore('cards', {
         await axios.delete(`http://localhost:8080/backend/api/endpoint.php?path=wants`, {
           data: { id },
         })
-        this.wants = this.wants.filter((card) => card.id !== id) // Update the state
+        this.wants = this.wants.filter((card) => card.card_id !== id) // Update the state
       } catch (error) {
         console.error('Error deleting the card:', error)
       }

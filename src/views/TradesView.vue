@@ -1,7 +1,7 @@
 <template>
   <h1>Trades</h1>
   <div class="table-container">
-    <v-table class="mb-4" density="compact">
+    <v-table class="rounded" density="compact">
       <thead>
         <tr>
           <th>User</th>
@@ -13,10 +13,14 @@
         <tr v-for="trade in trades" :key="trade.user_id" :trade="trade">
           <td><v-icon color="blue-grey-darken-2" icon="mdi-account-circle-outline" size="small"></v-icon> {{
             trade['user_name'] }}</td>
-          <td v-for="have in trade['haves']" :key="have.card_name" :card="have"><v-icon color="blue-grey-darken-2"
-              icon="mdi-cards-outline" size="small"></v-icon> {{ have.card_name }}</td>
-          <td v-for="want in trade['wants']" :key="want.card_name" :card="want"><v-icon color="blue-grey-darken-2"
-              icon="mdi-cards-outline" size="small"></v-icon> {{ want.card_name }}</td>
+          <td>
+            <div v-for="have in trade['haves']" :key="have.card_name" :card="have"><v-icon color="blue-grey-darken-2"
+                icon="mdi-cards-outline" size="small"></v-icon> {{ have.card_name }}</div>
+          </td>
+          <td>
+            <div v-for="want in trade['wants']" :key="want.card_name" :card="want"><v-icon color="blue-grey-darken-2"
+                icon="mdi-cards-outline" size="small"></v-icon> {{ want.card_name }}</div>
+          </td>
         </tr>
       </tbody>
     </v-table>
