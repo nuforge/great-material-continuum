@@ -31,6 +31,7 @@ defineProps({
   }
 })
 
+
 const emit = defineEmits(['delete-item']);
 
 const deleteItem = (itemId: number, tableName: string) => {

@@ -2,11 +2,9 @@
   <tr class="cardrow">
     <td>{{ card.id }}</td>
     <td class="name"><v-icon color="blue-grey-darken-2" icon="mdi-cards-outline" size="small"></v-icon> {{
-      card.card_id }}. {{
-        card.card_name }} </td>
+      card.card_name }} </td>
     <td class="userid"><v-icon color="blue-grey-darken-2" icon="mdi-account-circle-outline" size="small"></v-icon> {{
-      card.user_id }}. {{
-        card.user_name }}
+      card.user_name }}
     </td>
     <td class="actions">
       <v-icon color="blue-grey-darken-2" icon="mdi-delete-outline" @click="handleDelete(card.id, table)"></v-icon>

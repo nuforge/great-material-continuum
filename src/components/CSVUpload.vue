@@ -1,13 +1,25 @@
 <template>
-  <!-- CSV upload form -->
-  <v-form v-model="valid" @submit.prevent>
-    <v-file-input v-model="file" accept=".csv" clearable label="Select CSV file" prepend-icon="mdi-file-upload"
-      chips></v-file-input>
-    <v-btn color="primary" @click="handleFileUpload" block>
-      Upload
-    </v-btn>
-  </v-form>
-  <p>{{ uploadMessage }}</p>
+  <v-dialog max-width="500">
+    <template v-slot:activator="{ props: dialogOpen }">
+      <v-btn v-bind="dialogOpen" text="Upload CSV List" prepend-icon="mdi-file-upload" variant="outlined" size="small"
+        color="grey"></v-btn>
+    </template>
+    <template v-slot:default="{ isActive }">
+      <v-card title="Upload CSV List" prepend-icon="mdi-file-upload" max-width="400">
+        <v-card-text>{{ uploadMessage }}
+          <!-- CSV upload form -->
+          <v-form v-model="valid" @submit.prevent>
+            <v-file-input v-model="file" accept=".csv" clearable label="Select CSV file" prepend-icon="mdi-paperclip"
+              chips></v-file-input>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="d-flex jusify-space-between">
+          <v-btn text="Close" color="warning" @click="isActive.value = false"></v-btn>
+          <v-btn text="Upload" color="primary" @click="handleFileUpload"></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">

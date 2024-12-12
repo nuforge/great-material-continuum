@@ -1,8 +1,10 @@
 <template>
-  <h1>Wishlist</h1>
+  <div class="d-flex justify-space-between align-center">
+    <h1>Wishlist</h1>
+    <CSVUpload table="inventory" />
+  </div>
   <div class="wishlist">
     <CardList :cards="cardStore.wishlist" table="wishlist" @delete-item="deleteItem" />
-    <CSVUpload table="wishlist" />
   </div>
 </template>
 

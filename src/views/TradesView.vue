@@ -42,7 +42,6 @@ const trades = ref<Trade[]>([]);
 
 onMounted(async () => {
   const response = await axios.get('http://localhost:8080/backend/api/endpoint.php?path=trades')
-  console.log('Fetched trades:', response)
   trades.value = response.data
 });
 </script>
