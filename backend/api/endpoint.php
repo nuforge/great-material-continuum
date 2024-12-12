@@ -16,7 +16,7 @@ header("Content-Type: application/json");
 
 function getUsers() {
     // Fetch all users from the 'users' table
-    $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
+    $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
     $result = $db->query('SELECT * FROM users');
     $users = [];
 
@@ -30,8 +30,8 @@ function getUsers() {
 
 function getCards($table) {
     // Fetch all cards from the passed table
-    $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
-    $result = $db->query("SELECT * FROM $table LEFT JOIN users ON $table.user_id = users.id");
+    $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
+    $result = $db->query("SELECT * FROM $table LEFT JOIN users ON $table.user_id = users.id LEFT JOIN cards ON $table.card_id = cards.id");
     $cards = [];
 
     while ($row = $result->fetchArray()) {
@@ -54,12 +54,12 @@ function uploadCards($table) {
     $input = json_decode(file_get_contents('php://input'), true);
     
     if (isset($input['cards']) && is_array($input['cards'])) {
-        $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db');
+        $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db');
         
         foreach ($input['cards'] as $card) {
             // Insert each card into the 'haves' or 'wants' table
-            $stmt = $db->prepare("INSERT INTO $table (card_name,user_id) VALUES (:card_name,:user_id)");
-            $stmt->bindValue(':card_name', $card['card_name']);
+            $stmt = $db->prepare("INSERT INTO $table (card_id,user_id) VALUES (:card_id,:user_id)");
+            $stmt->bindValue(':card_id', $card['card_id']);
             $stmt->bindValue(':user_id', $card['user_id']);
             $stmt->execute();
         }
@@ -83,7 +83,7 @@ function deleteCard($table = 'haves') {
     $cardId = $input['id'] ?? null;
     
     if (isset($cardId)) {
-        $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db');
+        $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db');
         $stmt = $db->prepare("DELETE FROM $table WHERE id = :id");
         $stmt->bindValue(':id', $cardId);
         $stmt->execute();
@@ -104,7 +104,7 @@ function deleteWantCard() {
 
 function generateTradesHandler() {
     // Fetch all trades from the 'proposed_trades' table
-    $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
+    $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
     $trades = generateTrades($db); // Call the function from graphTrades.php
     if ($trades) {
         echo json_encode(['success' => true, 'trades' => $trades]);

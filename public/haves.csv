@@ -1,11 +1,11 @@
-card_name,user_id
-"Counterspell",1
-"Fireball",1
-"Dark Ritual",1
-"Fireball",2
-"Dark Ritual",2
-"Pacifism",2
-"Dark Ritual",3
-"Pacifism",3
-"Giant Growth",3
-"Counterspell",4
+card_id,user_id
+1,1
+2,1
+3,1
+2,2
+3,2
+4,2
+3,3
+4,3
+5,3
+1,4

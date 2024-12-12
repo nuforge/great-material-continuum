@@ -6,8 +6,7 @@ function loadGraph($db) {
         SELECT u1.id AS user_id, h.id AS have, w.id AS want
         FROM users u1
         JOIN haves h ON u1.id = h.user_id
-        JOIN wants w ON u1.id = w.user_id
-        WHERE u1.id = 1";
+        JOIN wants w ON u1.id = w.user_id";
     $result = $db->query($query);
 
     $graph = [];
@@ -81,4 +80,3 @@ function generateTrades($db) {
 
     return $trades;
 }
-
