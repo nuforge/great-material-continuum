@@ -1,6 +1,6 @@
 <template>
   <h1>Trades</h1>
-  <div class="table-container" v-for="trade in trades" :key="trade" :trade="trade">
+  <div class="table-container" v-for="trade in trades" :key="trade.user_id" :trade="trade">
     <v-table class="mb-4" density="compact">
       <thead>
         <tr>
@@ -11,7 +11,7 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ trade.user_name }}</td>
+          <td>{{ trade['user_name'] }}</td>
           <td v-for="have in trade['haves']" :key="have.card_name" :card="have">{{ have.card_name }}</td>
           <td v-for="want in trade['wants']" :key="want.card_name" :card="want">{{ want.card_name }}</td>
         </tr>
@@ -24,7 +24,14 @@
 import { onMounted, ref } from 'vue';
 import axios from 'axios'
 
-const trades = ref([]);
+interface Trade {
+  user_name: string;
+  user_id: number;
+  haves: { card_name: string }[];
+  wants: { card_name: string }[];
+}
+
+const trades = ref<Trade[]>([]);
 
 onMounted(async () => {
   const response = await axios.get('http://localhost:8080/backend/api/endpoint.php?path=trades')
