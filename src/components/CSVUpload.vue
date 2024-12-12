@@ -1,18 +1,13 @@
 <template>
-  <v-card subtitle="Upload CSV to Add Cards">
-    <v-card-actions>
-      <!-- CSV upload form -->
-      <form @submit.prevent="handleFileUpload">
-        <label for="file-upload">
-          <v-btn prepend-icon="mdi-folder-upload" @click="triggerFileInput">Choose a CSV file</v-btn>
-        </label>
-        <input id="file-upload" type="file" ref="fileInput" accept=".csv" style="display: none;" />
-        <v-btn prepend-icon="mdi-export-variant" @click="handleFileUpload">upload</v-btn>
-      </form>
-      <!-- Display success or error message -->
-      <p v-if="uploadMessage">{{ uploadMessage }}</p>
-    </v-card-actions>
-  </v-card>
+  <!-- CSV upload form -->
+  <v-form v-model="valid" @submit.prevent>
+    <v-file-input v-model="file" accept=".csv" clearable label="Select CSV file" prepend-icon="mdi-file-upload"
+      chips></v-file-input>
+    <v-btn color="primary" @click="handleFileUpload" block>
+      Upload
+    </v-btn>
+  </v-form>
+  <p>{{ uploadMessage }}</p>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +15,8 @@ import { ref, defineProps } from 'vue';
 import axios from 'axios';
 import Papa from 'papaparse';  // Import PapaParse
 
+const valid = ref<boolean>(false);
+const file = ref<File | null>(null);
 const cardTable = defineProps({
   table: {
     type: String,
@@ -34,26 +31,15 @@ interface Card {
 
 const uploadMessage = ref<string | null>(null);
 
-// Define the file input reference
-const fileInput = ref<HTMLInputElement | null>(null);
-
-const triggerFileInput = () => {
-  fileInput.value?.click();
-};
 // Handle the file upload and parse the CSV
-
 const handleFileUpload = async () => {
-  const input = fileInput.value;  // Access the file input reference
-
-  if (!input || !input.files?.length) {
+  if (!file.value) {
     uploadMessage.value = "Please select a file to upload.";
     return;
   }
 
-  const file = input.files[0];  // Get the selected file
-
   // Parse the CSV file using PapaParse
-  Papa.parse<Card>(file, {
+  Papa.parse<Card>(file.value, {
     complete: async (result) => {
       const cards: Card[] = result.data;  // Assuming CSV is structured in rows of [card_name, user]
       // Send the parsed data to the backend

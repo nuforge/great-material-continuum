@@ -3,8 +3,8 @@
 $db = new SQLite3(__DIR__ . '/trades.db');
 
 // Example data to insert (replace with actual data from a form or API)
-$name = 'John Doe';
-$email = 'john.doe@example.com';
+$name = 'tcgstore';
+$email = 'tcgstore@email.com';
 
 // Prepare the SQL query using placeholders for the parameters
 $query = "INSERT INTO users (name, email) VALUES (:name, :email)";

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../graphtrades.php';
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -29,7 +31,7 @@ function getUsers() {
 function getCards($table) {
     // Fetch all cards from the passed table
     $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
-    $result = $db->query("SELECT * FROM $table");
+    $result = $db->query("SELECT * FROM $table LEFT JOIN users ON $table.user_id = users.id");
     $cards = [];
 
     while ($row = $result->fetchArray()) {
@@ -100,6 +102,17 @@ function deleteWantCard() {
     deleteCard('wants');
 }
 
+function generateTradesHandler() {
+    // Fetch all trades from the 'proposed_trades' table
+    $db = new SQLite3(__DIR__ . '/../..' . '/database/trades.db'); // Use __DIR__ for the current script's directory
+    $trades = generateTrades($db); // Call the function from graphTrades.php
+    if ($trades) {
+        echo json_encode(['success' => true, 'trades' => $trades]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to generate trades.']);
+    }
+}
+
 $routes = [
     'users' => [
         'GET' => 'getUsers',
@@ -116,6 +129,9 @@ $routes = [
         'GET' => 'getWants',
         'POST' => 'uploadWants',
         'DELETE' => 'deleteWantCard'
+    ],
+    'trades' => [
+        'GET' => 'generateTradesHandler',
     ]
 ];
 

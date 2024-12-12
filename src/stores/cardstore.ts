@@ -11,16 +11,13 @@ export const useCardStore = defineStore('cards', {
     async fetchHaves() {
       const response = await axios.get('http://localhost:8080/backend/api/endpoint.php?path=haves')
       this.haves = response.data
-      console.log('Fetched haves:', this.haves)
     },
     async fetchWants() {
       const response = await axios.get('http://localhost:8080/backend/api/endpoint.php?path=wants')
       this.wants = response.data
-      console.log('Fetched wants:', this.wants)
     },
 
     async deleteCard(id: number, table: string) {
-      console.log('Deleting card with id:', id, 'from table:', table)
       switch (table) {
         case 'haves':
           this.deleteHave(id)
@@ -34,7 +31,6 @@ export const useCardStore = defineStore('cards', {
     },
 
     async deleteHave(id: number) {
-      console.log('Deleting Have with id:', id)
       try {
         await axios.delete(`http://localhost:8080/backend/api/endpoint.php?path=haves`, {
           data: { id },
@@ -45,7 +41,6 @@ export const useCardStore = defineStore('cards', {
       }
     },
     async deleteWant(id: number) {
-      console.log('Deleting Want with id:', id)
       try {
         await axios.delete(`http://localhost:8080/backend/api/endpoint.php?path=wants`, {
           data: { id },
