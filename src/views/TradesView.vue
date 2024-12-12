@@ -14,11 +14,11 @@
           <td><v-icon color="blue-grey-darken-2" icon="mdi-account-circle-outline" size="small"></v-icon> {{
             trade['user_name'] }}</td>
           <td>
-            <div v-for="have in trade['haves']" :key="have.card_name" :card="have"><v-icon color="blue-grey-darken-2"
-                icon="mdi-cards-outline" size="small"></v-icon> {{ have.card_name }}</div>
+            <div v-for="have in trade['inventory']" :key="have.card_name" :card="have"><v-icon
+                color="blue-grey-darken-2" icon="mdi-cards-outline" size="small"></v-icon> {{ have.card_name }}</div>
           </td>
           <td>
-            <div v-for="want in trade['wants']" :key="want.card_name" :card="want"><v-icon color="blue-grey-darken-2"
+            <div v-for="want in trade['wishlist']" :key="want.card_name" :card="want"><v-icon color="blue-grey-darken-2"
                 icon="mdi-cards-outline" size="small"></v-icon> {{ want.card_name }}</div>
           </td>
         </tr>
@@ -34,8 +34,8 @@ import axios from 'axios'
 interface Trade {
   user_name: string;
   user_id: number;
-  haves: { card_name: string }[];
-  wants: { card_name: string }[];
+  inventory: { card_name: string }[];
+  wishlist: { card_name: string }[];
 }
 
 const trades = ref<Trade[]>([]);

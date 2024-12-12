@@ -14,14 +14,14 @@ $queries = [
         card_name TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )",
-    "CREATE TABLE IF NOT EXISTS haves (
+    "CREATE TABLE IF NOT EXISTS inventory (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         card_id INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (card_id) REFERENCES cards(id)
     )",
-    "CREATE TABLE IF NOT EXISTS wants (
+    "CREATE TABLE IF NOT EXISTS wishlist (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         card_id INTEGER NOT NULL,
@@ -40,7 +40,7 @@ foreach ($queries as $query) {
 }
 
 
-$dataFiles = ['users', 'cards', 'haves', 'wants'];
+$dataFiles = ['users', 'cards', 'inventory', 'wishlist'];
 
 foreach ($dataFiles as $file) {
     if (!file_exists('../public/' . $file . '.csv')) {
@@ -51,30 +51,30 @@ foreach ($dataFiles as $file) {
 }
 
 foreach (json_decode($data['users'], true) as $user) {
-    // Insert each card into the 'haves' or 'wants' table
+    // Insert each card into the 'inventory' or 'wishlist' table
     $stmt = $db->prepare("INSERT INTO users (name,email) VALUES (:name,:email)");
     $stmt->bindValue(':name', $user['name']);
     $stmt->bindValue(':email', $user['email']);
     $stmt->execute();
 }
 foreach (json_decode($data['cards'], true) as $card) {
-    // Insert each card into the 'haves' or 'wants' table
+    // Insert each card into the 'inventory' or 'wishlist' table
     $stmt = $db->prepare("INSERT INTO cards (id,card_name) VALUES (:id,:card_name)");
     $stmt->bindValue(':id', $card['id']);
     $stmt->bindValue(':card_name', $card['card_name']);
     $stmt->execute();
 }
 
-foreach (json_decode($data['haves'], true) as $have) {
-    // Insert each card into the 'haves' or 'wants' table
-    $stmt = $db->prepare("INSERT INTO haves (card_id,user_id) VALUES (:card_id,:user_id)");
+foreach (json_decode($data['inventory'], true) as $have) {
+    // Insert each card into the 'inventory' or 'wishlist' table
+    $stmt = $db->prepare("INSERT INTO inventory (card_id,user_id) VALUES (:card_id,:user_id)");
     $stmt->bindValue(':card_id', $have['card_id']);
     $stmt->bindValue(':user_id', $have['user_id']);
     $stmt->execute();
 }
-foreach (json_decode($data['wants'], true) as $have) {
-    // Insert each card into the 'haves' or 'wants' table
-    $stmt = $db->prepare("INSERT INTO wants (card_id,user_id) VALUES (:card_id,:user_id)");
+foreach (json_decode($data['wishlist'], true) as $have) {
+    // Insert each card into the 'inventory' or 'wishlist' table
+    $stmt = $db->prepare("INSERT INTO wishlist (card_id,user_id) VALUES (:card_id,:user_id)");
     $stmt->bindValue(':card_id', $have['card_id']);
     $stmt->bindValue(':user_id', $have['user_id']);
     $stmt->execute();

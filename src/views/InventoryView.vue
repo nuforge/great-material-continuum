@@ -1,11 +1,10 @@
 <template>
   <h1>Inventory</h1>
   <div class="inventory">
-    <CardList :cards="cardStore.haves" />
-    <CSVUpload table="haves" />
+    <CardList :cards="cardStore.inventory" table="inventory" @delete-item="deleteItem" />
+    <CSVUpload table="inventory" />
   </div>
 </template>
-
 
 <script setup lang="ts">
 import CSVUpload from '@/components/CSVUpload.vue'
@@ -15,8 +14,12 @@ import { useCardStore } from '@/stores/cardstore.ts';
 const cardStore = useCardStore();
 
 onMounted(async () => {
-  await cardStore.fetchHaves();
+  await cardStore.fetchInventory();
 });
+
+const deleteItem = (itemId: number, tableName: string) => {
+  cardStore.deleteCard(itemId, tableName);
+};
 </script>
 
 <style>

@@ -1,5 +1,6 @@
 <template>
   <tr class="cardrow">
+    <td>{{ card.id }}</td>
     <td class="name"><v-icon color="blue-grey-darken-2" icon="mdi-cards-outline" size="small"></v-icon> {{
       card.card_id }}. {{
         card.card_name }} </td>
@@ -8,16 +9,13 @@
         card.user_name }}
     </td>
     <td class="actions">
-      <v-icon color="blue-grey-darken-2" icon="mdi-delete-outline"
-        @click="cardStore.deleteCard(card.id, table)"></v-icon>
+      <v-icon color="blue-grey-darken-2" icon="mdi-delete-outline" @click="handleDelete(card.id, table)"></v-icon>
     </td>
   </tr>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-import { useCardStore } from '../stores/cardstore.ts';
-const cardStore = useCardStore();
+import { defineProps, defineEmits } from 'vue'
 
 defineProps({
   card: {
@@ -26,9 +24,16 @@ defineProps({
   },
   table: {
     type: String,
-    default: () => ('haves')
+    default: () => ('inventory')
   }
 })
+
+const emit = defineEmits(['delete-item']);
+
+const handleDelete = (itemId: number, tableName: string) => {
+  console.log('delete-item', itemId, tableName);
+  emit('delete-item', itemId, tableName);
+};
 </script>
 
 <style scoped>

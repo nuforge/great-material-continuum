@@ -15,18 +15,18 @@ if ($path === 'users' && $method === 'POST') {
     echo json_encode(['success' => true, 'id' => $db->lastInsertRowID()]);
 }
 
-if ($path === 'haves' && $method === 'POST') {
+if ($path === 'inventory' && $method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $stmt = $db->prepare('INSERT INTO haves (user_id, card_name) VALUES (:user_id, :card_name)');
+    $stmt = $db->prepare('INSERT INTO inventory (user_id, card_name) VALUES (:user_id, :card_name)');
     $stmt->bindValue(':user_id', $data['user_id']);
     $stmt->bindValue(':card_name', $data['card_name']);
     $stmt->execute();
     echo json_encode(['success' => true, 'id' => $db->lastInsertRowID()]);
 }
 
-if ($path === 'wants' && $method === 'POST') {
+if ($path === 'wishlist' && $method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $stmt = $db->prepare('INSERT INTO wants (user_id, card_name) VALUES (:user_id, :card_name)');
+    $stmt = $db->prepare('INSERT INTO wishlist (user_id, card_name) VALUES (:user_id, :card_name)');
     $stmt->bindValue(':user_id', $data['user_id']);
     $stmt->bindValue(':card_name', $data['card_name']);
     $stmt->execute();

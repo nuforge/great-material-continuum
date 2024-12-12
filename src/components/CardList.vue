@@ -3,28 +3,40 @@
     <v-table class="card-table rounded">
       <thead>
         <tr>
+          <th>id</th>
           <th>Card</th>
           <th>User</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <CardItem v-for="card in cards" :key="card.card_id" :card="card" table="wants" />
+        <CardItem v-for="card in cards" :key="card.id" :card="card" :table="table" @delete-item="deleteItem" />
       </tbody>
     </v-table>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import CardItem from './CardItem.vue'
 
 defineProps({
   cards: {
     type: Object,
-    default: () => ({})
+    default: () => (null)
+  },
+  table: {
+    type: String,
+    default: () => ('inventory')
   }
 })
+
+const emit = defineEmits(['delete-item']);
+
+const deleteItem = (itemId: number, tableName: string) => {
+  console.log('delete-item', itemId, tableName);
+  emit('delete-item', itemId, tableName);
+};
 
 </script>
 

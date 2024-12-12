@@ -10,8 +10,8 @@ function loadGraph($db) {
         c1.card_name AS have_name, 
         c2.card_name AS want_name
         FROM users u1
-        INNER JOIN haves h ON u1.id = h.user_id
-        INNER JOIN wants w ON u1.id = w.user_id
+        INNER JOIN inventory h ON u1.id = h.user_id
+        INNER JOIN wishlist w ON u1.id = w.user_id
         LEFT JOIN cards c1 ON h.card_id = c1.id
         LEFT JOIN cards c2 ON w.card_id = c2.id
         GROUP BY h.card_id, w.card_id";
@@ -24,15 +24,15 @@ function loadGraph($db) {
             $graph[$userId] = [
                 'user_id' => $row['user_id'],
                 'user_name' => $row['user_name'],
-                'haves' => [],
-                'wants' => []
+                'inventory' => [],
+                'wishlist' => []
             ];
         }
-        $graph[$userId]['haves'][] = [
+        $graph[$userId]['inventory'][] = [
             'card_id' => $row['have'],
             'card_name' => $row['have_name']
         ];
-        $graph[$userId]['wants'][] = [
+        $graph[$userId]['wishlist'][] = [
             'card_id' => $row['want'],
             'card_name' => $row['want_name']
         ];
@@ -56,9 +56,9 @@ function findCycles($graph) {
         $stack[] = $cardId;
 
         foreach ($graph as $userId => $data) {
-            foreach ($data['haves'] as $have) {
+            foreach ($data['inventory'] as $have) {
                 if ($have['card_id'] === $cardId) {
-                    foreach ($data['wants'] as $want) {
+                    foreach ($data['wishlist'] as $want) {
                         $dfs($want['card_id'], $path);
                     }
                 }
@@ -69,7 +69,7 @@ function findCycles($graph) {
     };
 
     foreach ($graph as $userId => $data) {
-        foreach ($data['haves'] as $have) {
+        foreach ($data['inventory'] as $have) {
             $dfs($have['card_id'], []);
         }
     }
@@ -94,8 +94,8 @@ function generateTrades($db) {
             $item = null;
 
             foreach ($graph[$from] as $edge) {
-                if ($edge['wants'] == $to) {
-                    $item = $edge['haves'];
+                if ($edge['wishlist'] == $to) {
+                    $item = $edge['inventory'];
                     break;
                 }
             }

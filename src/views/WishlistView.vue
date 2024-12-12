@@ -1,8 +1,8 @@
 <template>
   <h1>Wishlist</h1>
   <div class="wishlist">
-    <CardList :cards="cardStore.wants" />
-    <CSVUpload table="wants" />
+    <CardList :cards="cardStore.wishlist" table="wishlist" />
+    <CSVUpload table="wishlist" />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import { useCardStore } from '@/stores/cardstore.ts';
 const cardStore = useCardStore();
 
 onMounted(async () => {
-  await cardStore.fetchWants();
+  await cardStore.fetchWishlist();
 });
 </script>
 

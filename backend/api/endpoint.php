@@ -33,6 +33,7 @@ function getCards($table) {
     $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
     $result = $db->query("
     SELECT DISTINCT
+        t.id as id,
         u1.id AS user_id, 
         u1.name AS user_name, 
         c1.id AS card_id, 
@@ -51,12 +52,12 @@ function getCards($table) {
     echo json_encode($cards); // Return cards as JSON
 }
 
-function getHaves() {
-    getCards('haves');
+function getinventory() {
+    getCards('inventory');
 }
 
-function getWants() {
-    getCards('wants');
+function getwishlist() {
+    getCards('wishlist');
 }
 
 function uploadCards($table) {
@@ -67,7 +68,7 @@ function uploadCards($table) {
         $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db');
         
         foreach ($input['cards'] as $card) {
-            // Insert each card into the 'haves' or 'wants' table
+            // Insert each card into the 'inventory' or 'wishlist' table
             $stmt = $db->prepare("INSERT INTO $table (card_id,user_id) VALUES (:card_id,:user_id)");
             $stmt->bindValue(':card_id', $card['card_id']);
             $stmt->bindValue(':user_id', $card['user_id']);
@@ -79,15 +80,15 @@ function uploadCards($table) {
     }
 }
 
-function uploadHaves() {
-    uploadCards('haves');
+function uploadinventory() {
+    uploadCards('inventory');
 }
 
-function uploadWants() {
-    uploadCards('wants');
+function uploadwishlist() {
+    uploadCards('wishlist');
 }
 
-function deleteCard($table = 'haves') {
+function deleteCard($table = 'inventory') {
     // Handle the card deletion
     $input = json_decode(file_get_contents('php://input'), true);
     $cardId = $input['id'] ?? null;
@@ -106,10 +107,10 @@ function deleteCard($table = 'haves') {
 }
 
 function deleteHaveCard() {
-    deleteCard('haves');
+    deleteCard('inventory');
 }
 function deleteWantCard() {
-    deleteCard('wants');
+    deleteCard('wishlist');
 }
 
 function generateTradesHandler() {
@@ -130,14 +131,14 @@ $routes = [
         'PUT' => 'updateUser',
         'DELETE' => 'deleteUser'
     ],
-    'haves' => [
-        'GET' => 'getHaves',
-        'POST' => 'uploadHaves',
+    'inventory' => [
+        'GET' => 'getinventory',
+        'POST' => 'uploadinventory',
         'DELETE' => 'deleteHaveCard'
     ],
-    'wants' => [
-        'GET' => 'getWants',
-        'POST' => 'uploadWants',
+    'wishlist' => [
+        'GET' => 'getwishlist',
+        'POST' => 'uploadwishlist',
         'DELETE' => 'deleteWantCard'
     ],
     'trades' => [
