@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <table class="card-table">
+    <v-table class="card-table">
       <thead>
         <tr>
           <th>Card</th>
@@ -11,7 +11,7 @@
       <tbody>
         <CardItem v-for="card in cardStore.wants" :key="card.id" :card="card" table="wants" />
       </tbody>
-    </table>
+    </v-table>
   </div>
 </template>
 

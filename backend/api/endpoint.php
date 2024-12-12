@@ -31,9 +31,19 @@ function getUsers() {
 function getCards($table) {
     // Fetch all cards from the passed table
     $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
-    $result = $db->query("SELECT * FROM $table LEFT JOIN users ON $table.user_id = users.id LEFT JOIN cards ON $table.card_id = cards.id");
-    $cards = [];
-
+    $result = $db->query("
+    SELECT DISTINCT
+        u1.id AS user_id, 
+        u1.name AS user_name, 
+        c1.id AS card_id, 
+        c1.card_name AS card_name
+    FROM 
+        $table t
+    INNER JOIN 
+        users u1 ON t.user_id = u1.id
+    INNER JOIN 
+        cards c1 ON t.card_id = c1.id;
+    ");
     while ($row = $result->fetchArray()) {
         $cards[] = $row;
     }
@@ -107,7 +117,7 @@ function generateTradesHandler() {
     $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
     $trades = generateTrades($db); // Call the function from graphTrades.php
     if ($trades) {
-        echo json_encode(['success' => true, 'trades' => $trades]);
+        echo $trades;
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to generate trades.']);
     }
