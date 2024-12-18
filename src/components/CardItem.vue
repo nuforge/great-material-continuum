@@ -1,9 +1,8 @@
 <template>
   <tr class="cardrow">
-    <td class="name"><v-chip prepend-icon="mdi-cards-outline" :text="card.card_name" label></v-chip></td>
-    <td class="userid"><v-icon color="blue-grey-darken-2" icon="mdi-account-circle-outline" size="small"></v-icon> {{
-      card.user_id }}. {{
-        card.user_name }}
+    <td class="name"><v-chip :text="card.card_name" prepend-icon="mdi-cards" label variant="text"></v-chip></td>
+    <td class="userid"><v-chip :text="card.user_name" prepend-icon="mdi-account-circle-outline" label
+        variant="text"></v-chip>
     </td>
     <td class="actions">
       <v-icon color="blue-grey-darken-2" icon="mdi-delete-outline" @click="handleDelete(card.id, table)"></v-icon>
