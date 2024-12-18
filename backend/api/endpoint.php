@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../graphtrades.php';
+define('DATABASE_PATH', realpath($_SERVER['DOCUMENT_ROOT'] .  '/database/continuum.db'));
+require_once '../graphtrades.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -15,22 +16,107 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');  // Allow s
 header("Content-Type: application/json");
 
 function getUsers() {
+
     // Fetch all users from the 'users' table
-    $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
+    $db = new SQLite3(DATABASE_PATH); // Use __DIR__ for the current script's directory
+    
     $result = $db->query('SELECT * FROM users');
     $users = [];
 
     while ($row = $result->fetchArray()) {
-        $users[] = $row;
+        $users[$row['id']] = $row;
     }
 
     echo json_encode($users); // Return users as JSON
 }
 
+function getUserData() {
+    $db = new SQLite3(DATABASE_PATH); // Use __DIR__ for the current script's directory
+    $query = "
+        SELECT 
+            u1.id AS user_id, 
+            u1.name AS user_name, 
+            inv.inventory_items, 
+            wish.wishlist_items
+        FROM 
+            users u1
+        LEFT JOIN (
+            SELECT 
+                i.user_id, 
+                GROUP_CONCAT(i.card_id || ':' || ci.card_name) AS inventory_items
+            FROM 
+                inventory i
+            LEFT JOIN 
+                cards ci ON i.card_id = ci.id
+            GROUP BY 
+                i.user_id
+        ) inv ON u1.id = inv.user_id
+        LEFT JOIN (
+            SELECT 
+                w.user_id, 
+                GROUP_CONCAT(w.card_id || ':' || cw.card_name) AS wishlist_items
+            FROM 
+                wishlist w
+            LEFT JOIN 
+                cards cw ON w.card_id = cw.id
+            GROUP BY 
+                w.user_id
+        ) wish ON u1.id = wish.user_id
+    ";
 
-function getCards($table) {
+    $result = $db->query($query);
+
+    $users = [];
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $userId = $row['user_id'];
+        if (!isset($users[$userId])) {
+            $users[$userId] = [
+                'id' => $row['user_id'],
+                'name' => $row['user_name'],
+                'inventory' => [],
+                'wishlist' => []
+            ];
+        }
+        if ($row['inventory_items']) {
+            $inventoryItems = explode(',', $row['inventory_items']);
+            foreach ($inventoryItems as $item) {
+                list($card_id, $card_name) = explode(':', $item);
+                $users[$userId]['inventory'][] = [
+                    'card_id' => $card_id,
+                    'card_name' => $card_name
+                ];
+            }
+        }
+        if ($row['wishlist_items']) {
+            $wishlistItems = explode(',', $row['wishlist_items']);
+            foreach ($wishlistItems as $item) {
+                list($card_id, $card_name) = explode(':', $item);
+                $users[$userId]['wishlist'][] = [
+                    'card_id' => $card_id,
+                    'card_name' => $card_name
+                ];
+            }
+        }
+    }
+    echo json_encode($users); // Return users as JSON
+}
+
+function getCards() {
+    // Fetch all users from the 'users' table
+    $db = new SQLite3(DATABASE_PATH); // Use __DIR__ for the current script's directory
+    $result = $db->query('SELECT * FROM cards');
+    $cards = [];
+
+    while ($row = $result->fetchArray()) {
+        $cards[$row['id']] = $row;
+    }
+
+    echo json_encode($cards); // Return users as JSON
+}
+
+function getUserCards($table) {
     // Fetch all cards from the passed table
-    $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
+    $db = new SQLite3(DATABASE_PATH); // Use __DIR__ for the current script's directory
     $result = $db->query("
     SELECT DISTINCT
         t.id as id,
@@ -43,7 +129,7 @@ function getCards($table) {
     INNER JOIN 
         users u1 ON t.user_id = u1.id
     INNER JOIN 
-        cards c1 ON t.card_id = c1.id;
+        cards c1 ON t.card_id = c1.id
     ");
     while ($row = $result->fetchArray()) {
         $cards[] = $row;
@@ -53,11 +139,11 @@ function getCards($table) {
 }
 
 function getinventory() {
-    getCards('inventory');
+    getUserCards('inventory');
 }
 
 function getwishlist() {
-    getCards('wishlist');
+    getUserCards('wishlist');
 }
 
 function uploadCards($table) {
@@ -65,7 +151,7 @@ function uploadCards($table) {
     $input = json_decode(file_get_contents('php://input'), true);
     
     if (isset($input['cards']) && is_array($input['cards'])) {
-        $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db');
+        $db = new SQLite3(DATABASE_PATH);
         
         foreach ($input['cards'] as $card) {
             // Insert each card into the 'inventory' or 'wishlist' table
@@ -94,7 +180,7 @@ function deleteCard($table = 'inventory') {
     $cardId = $input['id'] ?? null;
     
     if (isset($cardId)) {
-        $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db');
+        $db = new SQLite3(DATABASE_PATH);
         $stmt = $db->prepare("DELETE FROM $table WHERE id = :id");
         $stmt->bindValue(':id', $cardId);
         $stmt->execute();
@@ -115,7 +201,7 @@ function deleteWantCard() {
 
 function generateTradesHandler() {
     // Fetch all trades from the 'proposed_trades' table
-    $db = new SQLite3(__DIR__ . '/../..' . '/database/continuum.db'); // Use __DIR__ for the current script's directory
+    $db = new SQLite3(DATABASE_PATH); // Use __DIR__ for the current script's directory
     $trades = generateTrades($db); // Call the function from graphTrades.php
     if ($trades) {
         echo $trades;
@@ -126,10 +212,13 @@ function generateTradesHandler() {
 
 $routes = [
     'users' => [
-        'GET' => 'getUsers',
+        'GET' => 'getUserData',
         'POST' => 'createUser',
         'PUT' => 'updateUser',
         'DELETE' => 'deleteUser'
+    ],
+    'cards' => [
+        'GET' => 'getCards',
     ],
     'inventory' => [
         'GET' => 'getinventory',

@@ -11,10 +11,11 @@ import AppHeader from './components/AppHeader.vue';
           <div class="wrapper">
             <AppHeader msg="Great Material Continuum" />
             <nav>
-              <RouterLink to="/"></RouterLink>
-              <RouterLink to="/inventory"><v-icon icon="mdi-view-list"></v-icon> Inventory</RouterLink>
-              <RouterLink to="/wishlist"><v-icon icon="mdi-format-list-checkbox"></v-icon> Wishlist</RouterLink>
-              <RouterLink to="/trades"><v-icon icon="mdi-swap-horizontal-bold"></v-icon> Trades</RouterLink>
+              <RouterLink to="/inventory"><v-icon icon="mdi-view-list" size="small"></v-icon> Inventory</RouterLink>
+              <RouterLink to="/wishlist"><v-icon icon="mdi-format-list-checkbox" size="small"></v-icon> Wishlist
+              </RouterLink>
+              <RouterLink to="/trades"><v-icon icon="mdi-swap-horizontal-bold" size="small"></v-icon> Trades
+              </RouterLink>
             </nav>
           </div>
         </header>

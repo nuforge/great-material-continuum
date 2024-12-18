@@ -3,10 +3,9 @@
     <v-table class="card-table rounded">
       <thead>
         <tr>
-          <th>id</th>
           <th>Card</th>
           <th>User</th>
-          <th>Actions</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -55,7 +54,7 @@ const deleteItem = (itemId: number, tableName: string) => {
 
   th:last-child,
   td:last-child {
-    text-align: right;
+    text-align: right !important;
   }
 
 }

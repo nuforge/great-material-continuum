@@ -23,6 +23,8 @@ import {
   VCard,
   VCardActions,
   VDialog,
+  VChip,
+  VChipGroup,
 } from 'vuetify/components'
 
 import '@mdi/font/css/materialdesignicons.css'
@@ -48,6 +50,8 @@ const vuetify = createVuetify({
     VIcon,
     VBtn,
     VDialog,
+    VChip,
+    VChipGroup,
   },
 })
 

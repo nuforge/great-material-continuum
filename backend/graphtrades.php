@@ -13,8 +13,7 @@ function loadGraph($db) {
         INNER JOIN inventory h ON u1.id = h.user_id
         INNER JOIN wishlist w ON u1.id = w.user_id
         LEFT JOIN cards c1 ON h.card_id = c1.id
-        LEFT JOIN cards c2 ON w.card_id = c2.id
-        GROUP BY h.card_id, w.card_id";
+        LEFT JOIN cards c2 ON w.card_id = c2.id";
     $result = $db->query($query);
 
     $graph = [];
@@ -45,21 +44,34 @@ function findCycles($graph) {
     $visited = [];
     $stack = [];
     $cycles = [];
-    $dfs = function($cardId, $path) use (&$dfs, &$visited, &$stack, &$cycles, $graph) {
-        if (in_array($cardId, $stack)) {
-            $cycle = array_slice($stack, array_search($cardId, $stack));
+    $dfs = function($node, $path) use (&$dfs, &$visited, &$stack, &$cycles, $graph) {
+        $nodeId = $node['card_id'];
+        if (in_array($nodeId, array_column($stack, 'card_id'))) {
+            $cycle = array_slice($stack, array_search($nodeId, array_column($stack, 'card_id')));
             $cycles[] = $cycle;
             return;
         }
-        if (isset($visited[$cardId])) return;
-        $visited[$cardId] = true;
-        $stack[] = $cardId;
+        if (isset($visited[$nodeId])) return;
+        $visited[$nodeId] = true;
+        $stack[] = $node;
 
         foreach ($graph as $userId => $data) {
             foreach ($data['inventory'] as $have) {
-                if ($have['card_id'] === $cardId) {
+                if ($have['card_id'] === $nodeId) {
                     foreach ($data['wishlist'] as $want) {
-                        $dfs($want['card_id'], $path);
+                        // Skip if the user is trading with themselves or already has the card
+                        if ($userId == $node['user']['user_id']) continue;
+                        $dfs([
+                            'card_id' => $want['card_id'],
+                            'user' => [
+                                'user_id' => $userId,
+                                'user_name' => $data['user_name']
+                            ],
+                            'card' => [
+                                'card_id' => $want['card_id'],
+                                'card_name' => $want['card_name']
+                            ]
+                        ], $path);
                     }
                 }
             }
@@ -70,7 +82,17 @@ function findCycles($graph) {
 
     foreach ($graph as $userId => $data) {
         foreach ($data['inventory'] as $have) {
-            $dfs($have['card_id'], []);
+            $dfs([
+                'card_id' => $have['card_id'],
+                'user' => [
+                    'user_id' => $userId,
+                    'user_name' => $data['user_name']
+                ],
+                'card' => [
+                    'card_id' => $have['card_id'],
+                    'card_name' => $have['card_name']
+                ]
+            ], []);
         }
     }
 
@@ -82,10 +104,8 @@ function generateTrades($db) {
     $graph = loadGraph($db);
     $cycles = findCycles($graph);
     header('Content-Type: application/json');
-    $trades = json_encode($graph, JSON_PRETTY_PRINT);
-
-    /*
     $trades = [];
+
     foreach ($cycles as $cycle) {
         $trade = [];
         for ($i = 0; $i < count($cycle); $i++) {
@@ -93,21 +113,26 @@ function generateTrades($db) {
             $to = $cycle[($i + 1) % count($cycle)];
             $item = null;
 
-            foreach ($graph[$from] as $edge) {
-                if ($edge['wishlist'] == $to) {
-                    $item = $edge['inventory'];
-                    break;
+            foreach ($graph as $userId => $data) {
+                foreach ($data['inventory'] as $have) {
+                    if ($have['card_id'] == $from) {
+                        foreach ($data['wishlist'] as $want) {
+                            if ($want['card_id'] == $to) {
+                                $item = $have['card_name'];
+                                break 2;
+                            }
+                        }
+                    }
                 }
             }
 
             $trade[] = [
                 'from' => $from,
                 'to' => $to,
-                'item' => $item,
             ];
         }
         $trades[] = $trade;
-    }*/
+    }
 
-    return $trades;
+    return json_encode($trades, JSON_PRETTY_PRINT);
 }
