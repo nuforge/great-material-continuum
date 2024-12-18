@@ -1,22 +1,26 @@
 <template>
   <h1>Trades</h1>
-  <v-card v-for="(user, index) in users" :key="index" :user="user" class="">
-    <v-card-title>{{ user.name }}</v-card-title>
-    <v-card-text>
-      <h3>Inventory</h3>
-      <v-chip-group>
-        <v-chip v-for="(card, i) in user.inventory" :key="i" prepend-icon="mdi-cards-outline">{{
-          card.card_name
-        }}</v-chip></v-chip-group>
-      <h3>Wishlist</h3>
 
-      <v-chip-group>
-        <v-chip v-for="(card, i) in user.wishlist" :key="i" prepend-icon="mdi-cards-outline" color="blue">{{
-          card.card_name
-        }}</v-chip>
-      </v-chip-group>
-    </v-card-text>
-  </v-card>
+  <v-row dense>
+    <v-col cols="12" md="6" v-for="(user, index) in users" :key="index" :user="user">
+      <v-card :title="user.name" rounded>
+        <v-card-title></v-card-title>
+        <v-card-text>
+          <h3>Inventory</h3>
+          <v-chip-group selected-class="text-primary" multiple column>
+            <v-chip v-for="(card, i) in user.inventory" :key="i" prepend-icon="mdi-cards-outline" color="success"
+              :text="card.card_name"></v-chip>
+          </v-chip-group>
+          <h3>Wishlist</h3>
+
+          <v-chip-group selected-class="text-primary" multiple column>
+            <v-chip v-for="(card, i) in user.wishlist" :key="i" prepend-icon="mdi-cards-outline" color="info"
+              :text="card.card_name"></v-chip>
+          </v-chip-group>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 
 </template>
 
