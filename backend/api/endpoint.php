@@ -81,7 +81,7 @@ function getUserData() {
             $inventoryItems = explode(',', $row['inventory_items']);
             foreach ($inventoryItems as $item) {
                 list($card_id, $card_name) = explode(':', $item);
-                $users[$userId]['inventory'][] = [
+                $users[$userId]['inventory'][$card_id] = [
                     'card_id' => $card_id,
                     'card_name' => $card_name
                 ];
@@ -91,7 +91,7 @@ function getUserData() {
             $wishlistItems = explode(',', $row['wishlist_items']);
             foreach ($wishlistItems as $item) {
                 list($card_id, $card_name) = explode(':', $item);
-                $users[$userId]['wishlist'][] = [
+                $users[$userId]['wishlist'][$card_id] = [
                     'card_id' => $card_id,
                     'card_name' => $card_name
                 ];
@@ -130,6 +130,7 @@ function getUserCards($table) {
         users u1 ON t.user_id = u1.id
     INNER JOIN 
         cards c1 ON t.card_id = c1.id
+    WHERE u1.id = 1
     ");
     while ($row = $result->fetchArray()) {
         $cards[] = $row;

@@ -1,8 +1,6 @@
 <template>
   <tr class="cardrow">
-    <td class="name"><v-icon color="blue-grey-darken-2" icon="mdi-cards-outline" size="small"></v-icon> {{
-      card.card_id }}. {{
-        card.card_name }} </td>
+    <td class="name"><v-chip prepend-icon="mdi-cards-outline" :text="card.card_name" label></v-chip></td>
     <td class="userid"><v-icon color="blue-grey-darken-2" icon="mdi-account-circle-outline" size="small"></v-icon> {{
       card.user_id }}. {{
         card.user_name }}

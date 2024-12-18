@@ -25,6 +25,7 @@ import {
   VDialog,
   VChip,
   VChipGroup,
+  VDivider,
 } from 'vuetify/components'
 
 import '@mdi/font/css/materialdesignicons.css'
@@ -52,6 +53,7 @@ const vuetify = createVuetify({
     VDialog,
     VChip,
     VChipGroup,
+    VDivider,
   },
 })
 
